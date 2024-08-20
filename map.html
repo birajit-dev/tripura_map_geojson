@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Districts of Tripura Map</title>
+    <script src="https://code.highcharts.com/maps/highmaps.js"></script>
+    <script src="https://code.highcharts.com/maps/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/maps/modules/offline-exporting.js"></script>
+</head>
+<body>
+    <div id="container" style="height: 600px; width: 100%;"></div>
+
+    <script>
+        (async () => {
+            // Load the GeoJSON data for Tripura only
+            const topology = await fetch('tripura_state_geocode_final.json')
+                .then(response => response.json());
+
+            // District data with colors
+            const data = [
+                { key: 'WestTripura', value: 1, color: '#FF5733' },
+                { key: 'SouthTripura', value: 2, color: '#33FF57' },
+                { key: 'NorthTripura', value: 3, color: '#3357FF' },
+                { key: 'Dhalai', value: 4, color: '#FF33A1' },
+                { key: 'Khowai', value: 5, color: '#FFD133' },
+                { key: 'Sipahijala', value: 6, color: '#FF3333' },
+                { key: 'Gomati', value: 7, color: '#33FFF3' },
+                { key: 'Amarpur', value: 8, color: '#33FFF3' },
+                { key: 'Unokoti', value: 9, color: '#A133FF' },
+                { key: 'SouthTR', value: 10, color: '#A133FF' },
+
+            ];
+
+            Highcharts.mapChart('container', {
+                chart: {
+                    map: topology
+                },
+
+                title: {
+                    text: 'Districts of Tripura'
+                },
+
+                tooltip: {
+                    pointFormat: '{point.name}<br>Value: {point.value}'
+                },
+
+                series: [{
+                    name: 'Districts',
+                    data: data.map(d => ({
+                        name: d.key,
+                        value: d.value,
+                        color: d.color
+                    })),
+                    joinBy: ['NAME_2', 'name'],
+                    states: {
+                        hover: {
+                            color: '#BADA55'
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.name}'
+                    },
+                    borderColor: '#606060'
+                }]
+            });
+        })();
+    </script>
+</body>
+</html>
